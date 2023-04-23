@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class="main">
+        <h1>Notebook</h1>
+
+        <div class="words"> 
+            <ul class="list"></ul>
+        </div>
+        <button id="start" type="button">Take Note</button>
+    </div>
+    <script>
+        window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+        const recognition = new SpeechRecognition();
+
+        recognition.interimResults = true;
+
+        let li = document.createElement('li');
+        const list = document.querySelector(".list");
+
+        list.appendChild(li);
+
+        const main = document.querySelector(".main");
+        let listening = document.createElement("h2");
+        listening.textContent="Listening..";
+
+        recognition.addEventListener("result", e=>{
+            const transcript = e.results[0][0].transcript;
+            li.textContent=transcript;
+
+            if(e.results[0].isFinal){
+                document.querySelector("#start").innerHTML = "Take Note";
+                main.removeChild(listening);
+                li = document.createElement("li");
+                list.appendChild(li);
+                
+            }
+        });
+
+        document.querySelector("#start").addEventListener("click",()=>{
+            if(document.querySelector("#start").textContent ==="Take Note"){
+                document.querySelector("#start").innerHTML = "Stop Listening";
+                main.appendChild(listening);
+                recognition.start();
+            }
+            else if(document.querySelector("#start").textContent ==="Stop Listening"){
+                document.querySelector("#start").innerHTML = "Take Note";
+                main.removeChild(listening);
+                li = document.createElement("li");
+                list.appendChild(li);
+            }
+
+        });
+        //recognition.start();
+    </script>
+</body>
+</html>
